@@ -35,12 +35,22 @@ def make_csv(query, filename):
     return df
 
 
-quer = '''SELECT t.*
+quer_1 = '''SELECT t.*
 FROM (
   SELECT *, row_number() OVER(ORDER BY fl_date ASC) AS row
   FROM flights
 ) t
 WHERE t.row % 1000000 = 0'''
+quer_2 = '''SELECT * FROM fuel_comsumption'''
+quer_3 = '''SELECT t.*
+FROM (
+  SELECT *, row_number() OVER(ORDER BY month ASC) AS row
+  FROM passengers
+) t
+WHERE t.row % 20 = 0'''
 
-fname = '../data/try.csv'
-make_csv(quer, fname)
+fname_1 = '../data/flight_data_sample.csv'
+fname_2 = '../data/fuel_consumption.csv'
+fname_3 = '../data/passengers_sample.csv'
+
+# make_csv(quer_3, fname_3)
