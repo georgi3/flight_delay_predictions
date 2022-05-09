@@ -11,6 +11,9 @@ jan_flight_df['fl_date'] = pd.to_datetime(jan_flight_df['fl_date'])
 jan = pd.to_datetime('2018-02-01')
 jan_flight_df = jan_flight_df[jan_flight_df['fl_date'] < jan]
 CITIES = jan_flight_df['origin_city_name'].unique().tolist()
+CITIES_EX = ['New Orleans, LA',
+             'Salt Lake City, UT',
+             'Dallas/Fort Worth, TX']
 
 
 def clean_response(response, year, month, city_name, i):
@@ -62,7 +65,7 @@ params = {
 }
 url = 'https://api.worldweatheronline.com/premium/v1/past-weather.ashx'
 
-weather = get_weather_for_each_city(CITIES, url, 2018, 1, headers=headers, params=params)
+weather = get_weather_for_each_city(CITIES_EX, url, 2018, 1, headers=headers, params=params)
 with open('january_weather.json', 'w') as fp:
     json.dump(weather, fp)
 
