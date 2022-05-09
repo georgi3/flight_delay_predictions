@@ -40,7 +40,7 @@ FROM (
   SELECT *, row_number() OVER(ORDER BY fl_date ASC) AS row
   FROM flights
 ) t
-WHERE t.row % 1000000 = 0'''
+WHERE t.row % 150 = 0'''
 quer_2 = '''SELECT * FROM fuel_comsumption'''
 quer_3 = '''SELECT t.*
 FROM (
@@ -48,9 +48,18 @@ FROM (
   FROM passengers
 ) t
 WHERE t.row % 20 = 0'''
+quer_4 = '''
+SELECT t.*
+FROM (
+  SELECT *, row_number() OVER(ORDER BY fl_date ASC) AS row
+  FROM flights
+) t
+WHERE t.row % 6 = 0 LIMIT 120000;
+'''
 
 fname_1 = '../data/flight_data_sample.csv'
 fname_2 = '../data/fuel_consumption.csv'
 fname_3 = '../data/passengers_sample.csv'
+fname_4 = '../data/january_flights.csv'
 
-# make_csv(quer_3, fname_3)
+make_csv(quer_4, fname_4)
