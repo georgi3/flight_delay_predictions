@@ -3,6 +3,8 @@ import requests
 import json
 from calendar import monthrange
 import pandas as pd
+import os
+from dotenv import load_dotenv
 
 fname = '../data/january_flights.csv'
 jan_flight_df = pd.read_csv(fname)
@@ -15,6 +17,9 @@ CITIES_EX = ['New Orleans, LA',
              'Salt Lake City, UT',
              'Dallas/Fort Worth, TX']
 
+load_dotenv()
+API_KEY = os.getenv('AMMAR_API')
+
 
 def clean_response(response, year, month, city_name, i):
     """:returns dictionary with the weather for each day in a month for specified city"""
@@ -25,14 +30,16 @@ def clean_response(response, year, month, city_name, i):
     daily_weather = response.json().get('data', {}).get('weather', [])
     pois = ['windspeedKmph', 'visibility',
             'cloudcover', 'precipMM']  # 'totalSnow_cm' as well tho its stored in a different dict
-    month = {}
+    month = []
     city = {}
     for day in range(n_days):
         cleaned = {}
+        days = {}
         for key, index in zip(('00:00', '12:00'), (0, 1)):
             cleaned[key] = {k: daily_weather[day].get('hourly', [])[index].get(k, None) for k in pois}
             cleaned[key]['totalSnow_cm'] = daily_weather[day].get('totalSnow_cm', None)
-            month[day+1] = cleaned
+            days[day+1] = cleaned
+        month.append(days)
     city[city_name] = month
     print(f'returning {city_name}, {i}/{len(CITIES)}')
     return city
@@ -60,12 +67,12 @@ params = {
     'date': '2018-01-01',  # date format yyyy-MM-dd
     'enddate': '2018-01-31',  # date format yyyy-MM-dd
     'format': 'json',
-    'key': WEATHER_API_KEY,  # CHANGE TO YOUR API CODE
+    'key': API_KEY,  # CHANGE TO YOUR API CODE
     'tp': '12'  # hour interval (do not change)
 }
 url = 'https://api.worldweatheronline.com/premium/v1/past-weather.ashx'
 
-weather = get_weather_for_each_city(CITIES_EX, url, 2018, 1, headers=headers, params=params)
+weather = get_weather_for_each_city(CITIES, url, 2018, 1, headers=headers, params=params)
+print(len(weather['cities']))
 with open('january_weather.json', 'w') as fp:
     json.dump(weather, fp)
-
