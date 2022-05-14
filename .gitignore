@@ -5,4 +5,4 @@
 __pycache__/
 .env
 func_storage.ipynb
-.sav
+**.sav
