@@ -35,7 +35,9 @@ def clean_response(response, year, month, city_name, i):
     for day in range(n_days):
         cleaned = {}
         days = {}
-        for key, index in zip(('00:00', '12:00'), (0, 1)):
+        labels = ['00-03', '03-06', '06-09', '09-12', '12-15', '15-18', '18-21', '21-00']
+        indices = list(range(len(labels)))
+        for key, index in zip(labels, indices):
             cleaned[key] = {k: daily_weather[day].get('hourly', [])[index].get(k, None) for k in pois}
             cleaned[key]['totalSnow_cm'] = daily_weather[day].get('totalSnow_cm', None)
             days[day+1] = cleaned
@@ -67,12 +69,12 @@ params = {
     'date': '2018-01-01',  # date format yyyy-MM-dd
     'enddate': '2018-01-31',  # date format yyyy-MM-dd
     'format': 'json',
-    'key': API_KEY,  # CHANGE TO YOUR API CODE
-    'tp': '12'  # hour interval (do not change)
+    'key': WEATHER_API_KEY,  # CHANGE TO YOUR API CODE
+    'tp': '3'  # hour interval (do not change)
 }
 url = 'https://api.worldweatheronline.com/premium/v1/past-weather.ashx'
 
 weather = get_weather_for_each_city(CITIES, url, 2018, 1, headers=headers, params=params)
 print(len(weather['cities']))
-with open('january_weather.json', 'w') as fp:
+with open('../data/january_weather_interval_3.json', 'w') as fp:
     json.dump(weather, fp)
