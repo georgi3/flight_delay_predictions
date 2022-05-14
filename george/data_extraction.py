@@ -56,10 +56,17 @@ FROM (
 ) t
 WHERE t.row % 6 = 0 LIMIT 120000;
 '''
+quer_5 = '''
+SELECT * FROM flights_test;
+'''
+quer_6 = '''SELECT * FROM flights TABLESAMPLE SYSTEM(4)'''
+quer_7 = '''SELECT * FROM test_talbe'''
 
 fname_1 = '../data/flight_data_sample.csv'
 fname_2 = '../data/fuel_consumption.csv'
 fname_3 = '../data/passengers_sample.csv'
 fname_4 = '../data/january_flights.csv'
-
-make_csv(quer_4, fname_4)
+fname_5 = '../data/test_flights.csv'
+fname_6 = '../data/tester_flights.csv'
+fname_7 = '../data/final_test.csv'
+make_csv(quer_7, fname_7)
